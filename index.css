@@ -1,0 +1,69 @@
+#main-window {
+    border: solid 2px black;
+    border-radius: 6px;
+    width: 500px;
+}
+
+.game-box {
+    display: flex;
+    justify-content: space-evenly;
+    border: solid 2px black;
+    border-radius: 4px;
+    margin: 6px 4px;
+    height: 220px;
+    padding: 20px 0px;
+}
+
+.release-date-box {
+    border: solid 2px black;
+    text-align: center;
+    width: 150px;
+    height: 200px;
+}
+
+.cover-art-box {
+    border: solid 2px black;
+    text-align: center;
+    width: 150px;
+    height: 200px;
+}
+
+.cover-art {
+    width: 150px;
+}
+
+.title-box {
+    border: solid 2px black;
+    margin: 2px;
+    text-align: center;
+    padding: 2px;
+}
+
+.price-box {
+    border: solid 2px black;
+    margin: 2px;
+    text-align: center;
+}
+
+.title-price-box {
+    border: solid 2px black;
+    width: 150px;
+    height: 200px;
+}
+
+button {
+    border: 2px solid black;
+    border-radius: 2px;
+    margin-top: 4px;
+    padding: 3px 4px;
+    font-weight: bolder;
+    color: white;
+}
+
+#update-button {
+    background: green;
+}
+
+#delete-button {
+    background: red;
+}
