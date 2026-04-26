@@ -27,3 +27,54 @@ deleteBtn.addEventListener("click", function() {
     gameRD.textContent = "Release Date"
     gamePrice.textContent = "Price"
 })
+
+//Get Search Bar info
+let searchBar = document.getElementById("search-bar")
+let searchBarButton = document.getElementById("search-bar-button")
+
+searchBarButton.addEventListener("click", function() {
+    callAPI(searchBar.value)
+})
+
+async function callAPI(game) {
+    //Base URl
+    const url = "https://api.igdb.com/v4/games/"
+
+    try {
+        //Call the API with specified fields in the body
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Client-ID': '...',
+                'Authorization': '...'
+            },
+            body: `search "${game}"; fields name;`
+        })
+        //Get the Error Message
+        if(!response.ok) {
+            throw new Error(`Response Status: ${response.status}`)
+        }
+
+        //Get the response as a JSON object
+        const result = await response.json()
+
+        //Iterate through the result for each individual game and update HTML
+        let searchResultsEl = document.getElementById("search-results")
+        let searchResults = ""
+
+        for (let i = 0; i < result.length; i++) {
+            searchResults += `
+                <p>${result[i].id}</p>
+                <p>${result[i].name}</p>
+            `
+            console.log(result[i].id)
+            console.log(result[i].name)
+        }
+
+        searchResultsEl.innerHTML = searchResults
+
+        //Print the error message
+        } catch (error) {
+            console.error(error.message)
+        }
+}

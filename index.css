@@ -1,7 +1,26 @@
+/*
+Colors
+Charcoal #494949
+Bubblegum Pink #FF5D73
+Grey #7C7A7A
+String Cyan #4ECDC4
+*/
+
 #main-window {
+    background-color: #494949;
     border: solid 2px black;
     border-radius: 6px;
     max-width: 500px;
+}
+
+#search-bar-box {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+#search-bar {
+    width: 400px;
 }
 
 .game-box {
@@ -12,8 +31,11 @@
 }
 
 .release-date-box {
+    background-color: #4ECDC4;
     display: flex;
     border: solid 2px black;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
     min-width: 150px;
     height: 200px;
     justify-content: center;
@@ -53,12 +75,16 @@
 .title-price-box {
     display: flex;
     flex-direction: column;
+    background: linear-gradient(#FF5D73, #7C7A7A);
     border: solid 2px black;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     min-width: 150px;
     height: 200px;
 }
 
-button {
+#update-button {
+    background: green;
     border: 2px solid black;
     border-radius: 2px;
     margin-top: 4px;
@@ -67,12 +93,14 @@ button {
     color: white;
 }
 
-#update-button {
-    background: green;
-}
-
 #delete-button {
     background: red;
+    border: 2px solid black;
+    border-radius: 2px;
+    margin-top: 4px;
+    padding: 3px 4px;
+    font-weight: bolder;
+    color: white;
 }
 
 .add-game {
