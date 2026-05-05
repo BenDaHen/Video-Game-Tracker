@@ -45,8 +45,8 @@ async function callAPI(game) {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Client-ID': '...',
-                'Authorization': '...'
+                'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
+                'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
             },
             body: `search "${game}"; fields name;`
         })
