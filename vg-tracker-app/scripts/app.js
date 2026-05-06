@@ -38,17 +38,19 @@ searchBarButton.addEventListener("click", function() {
 
 async function callAPI(game) {
     //Base URl
-    const url = "https://api.igdb.com/v4/games/"
+    const game_url = "https://api.igdb.com/v4/games/"
+    const cover_art_url = "https://api.igdb.com/v4/covers"
 
     try {
-        //Call the API with specified fields in the body
-        const response = await fetch(url, {
+        //Call the game API with specified fields in the body
+        const response = await fetch(game_url, {
             method: 'POST',
             headers: {
+                'Accept': 'application/json',
                 'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
                 'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
             },
-            body: `search "${game}"; fields name;`
+            body: `search "${game}"; fields name, cover.image_id, release_date.human;`
         })
         //Get the Error Message
         if(!response.ok) {
@@ -64,11 +66,9 @@ async function callAPI(game) {
 
         for (let i = 0; i < result.length; i++) {
             searchResults += `
-                <p>${result[i].id}</p>
-                <p>${result[i].name}</p>
+                <p>Game ID: ${result[i].id}</p>
+                <p>Game Name: ${result[i].name}</p>
             `
-            console.log(result[i].id)
-            console.log(result[i].name)
         }
 
         searchResultsEl.innerHTML = searchResults
