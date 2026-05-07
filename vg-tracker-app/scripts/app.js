@@ -37,9 +37,15 @@ searchBarButton.addEventListener("click", function() {
 })
 
 async function callAPI(game) {
-    //Base URl
+    //Base URls
     const game_url = "https://api.igdb.com/v4/games/"
-    const cover_art_url = "https://api.igdb.com/v4/covers"
+    const cover_url = "https://api.igdb.com/v4/covers"
+    const release_url = "https://api.igdb.com/v4/release_dates"
+
+    //Search Results and store IDs for later calls
+    let gameIDs = []
+    let searchResults = ""
+    let searchResultsEl = document.getElementById("search-results")
 
     try {
         //Call the game API with specified fields in the body
@@ -50,7 +56,7 @@ async function callAPI(game) {
                 'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
                 'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
             },
-            body: `search "${game}"; fields name, cover.image_id, release_date.human;`
+            body: `search "${game}"; fields name;`
         })
         //Get the Error Message
         if(!response.ok) {
@@ -61,20 +67,82 @@ async function callAPI(game) {
         const result = await response.json()
 
         //Iterate through the result for each individual game and update HTML
-        let searchResultsEl = document.getElementById("search-results")
-        let searchResults = ""
-
         for (let i = 0; i < result.length; i++) {
             searchResults += `
                 <p>Game ID: ${result[i].id}</p>
                 <p>Game Name: ${result[i].name}</p>
             `
+
+            //Store the game ids for cover art and release date API cals
+            gameIDs.push(result[i].id)
         }
 
-        searchResultsEl.innerHTML = searchResults
+    //Print the error message
+    } catch (error) {
+        console.error(error.message)
+    }
+
+    try {
+        //Call the covers API with specified fields in the body
+        const response = await fetch(cover_url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
+                'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
+            },
+            body: `fields image_id; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});`
+        })
+        //Get the Error Message
+        if(!response.ok) {
+            throw new Error(`Response Status: ${response.status}`)
+        }
+
+        //Get the response as a JSON object
+        const result = await response.json()
+
+        //Iterate through the result for each individual game and update HTML
+        for (let i = 0; i < result.length; i++) {
+            searchResults += `
+                <image src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].image_id}.jpg'>
+            `
+        }
 
         //Print the error message
-        } catch (error) {
-            console.error(error.message)
+    } catch (error) {
+        console.error(error.message)
+    }
+
+    try {
+        //Call the release date API with specified fields in the body
+        const response = await fetch(release_url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
+                'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
+            },
+            body: `fields human; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});`
+        })
+        //Get the Error Message
+        if(!response.ok) {
+            throw new Error(`Response Status: ${response.status}`)
         }
+
+        //Get the response as a JSON object
+        const result = await response.json()
+
+        //Iterate through the result for each individual game and update HTML
+        for (let i = 0; i < result.length; i++) {
+            searchResults += `
+                <p>Release Date: ${result[i].human}</p>
+            `
+        }
+
+        //Print the error message
+    } catch (error) {
+        console.error(error.message)
+    }
+
+    searchResultsEl.innerHTML = searchResults
 }
