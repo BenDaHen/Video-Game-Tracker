@@ -44,6 +44,9 @@ async function callAPI(game) {
 
     //Search Results and store IDs for later calls
     let gameIDs = []
+    let gameNames = []
+    let gameCovers = []
+    let gameDates = []
     let searchResults = ""
     let searchResultsEl = document.getElementById("search-results")
 
@@ -66,15 +69,16 @@ async function callAPI(game) {
         //Get the response as a JSON object
         const result = await response.json()
 
-        //Iterate through the result for each individual game and update HTML
+        //Iterate through the result for each individual game and get the ids and names
         for (let i = 0; i < result.length; i++) {
-            searchResults += `
-                <p>Game ID: ${result[i].id}</p>
-                <p>Game Name: ${result[i].name}</p>
-            `
+            // searchResults += `
+            //     <p>Game ID: ${result[i].id}</p>
+            //     <p>Game Name: ${result[i].name}</p>
+            // `
 
             //Store the game ids for cover art and release date API cals
             gameIDs.push(result[i].id)
+            gameNames.push(result[i].name)
         }
 
     //Print the error message
@@ -91,7 +95,8 @@ async function callAPI(game) {
                 'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
                 'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
             },
-            body: `fields image_id; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});`
+            body: `fields image_id; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]});`
+            //, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});
         })
         //Get the Error Message
         if(!response.ok) {
@@ -103,9 +108,11 @@ async function callAPI(game) {
 
         //Iterate through the result for each individual game and update HTML
         for (let i = 0; i < result.length; i++) {
-            searchResults += `
-                <image src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].image_id}.jpg'>
-            `
+            // searchResults += `
+            //     <image src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].image_id}.jpg'>
+            // `
+
+            gameCovers.push(`<image src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].image_id}.jpg'>`)
         }
 
         //Print the error message
@@ -122,7 +129,8 @@ async function callAPI(game) {
                 'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
                 'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
             },
-            body: `fields human; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});`
+            body: `fields human; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]});`
+            //, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});
         })
         //Get the Error Message
         if(!response.ok) {
@@ -134,14 +142,26 @@ async function callAPI(game) {
 
         //Iterate through the result for each individual game and update HTML
         for (let i = 0; i < result.length; i++) {
-            searchResults += `
-                <p>Release Date: ${result[i].human}</p>
-            `
+            // searchResults += `
+            //     <p>Release Date: ${result[i].human}</p>
+            // `
+
+            gameDates.push(result[i].human)
         }
 
         //Print the error message
     } catch (error) {
         console.error(error.message)
+    }
+
+    //Create search results HTML and update element
+    for(let i = 0; i < 3; i++) {
+        searchResults += `
+            <h1>Name: ${gameNames[i]}</h1>
+            <p>ID: ${gameIDs[i]}</p>
+            ${gameCovers[i]}
+            <p>${gameDates[i]}</p>
+        `
     }
 
     searchResultsEl.innerHTML = searchResults
