@@ -59,7 +59,7 @@ async function callAPI(game) {
                 'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
                 'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
             },
-            body: `search "${game}"; fields name;`
+            body: `search "${game}"; fields *, name, cover.image_id, release_dates.human;`
         })
         //Get the Error Message
         if(!response.ok) {
@@ -68,6 +68,9 @@ async function callAPI(game) {
 
         //Get the response as a JSON object
         const result = await response.json()
+
+        console.log(result.length)
+
 
         //Iterate through the result for each individual game and get the ids and names
         for (let i = 0; i < result.length; i++) {
@@ -75,10 +78,11 @@ async function callAPI(game) {
             //     <p>Game ID: ${result[i].id}</p>
             //     <p>Game Name: ${result[i].name}</p>
             // `
-
-            //Store the game ids for cover art and release date API cals
+            //Store the game ids for cover art and release date API calls
             gameIDs.push(result[i].id)
             gameNames.push(result[i].name)
+            gameCovers.push(`<image src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].cover.image_id}.jpg'>`)
+            gameDates.push(result[i].release_dates?.human)
         }
 
     //Print the error message
@@ -86,76 +90,74 @@ async function callAPI(game) {
         console.error(error.message)
     }
 
-    try {
-        //Call the covers API with specified fields in the body
-        const response = await fetch(cover_url, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
-                'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
-            },
-            body: `fields image_id; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]});`
-            //, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});
-        })
-        //Get the Error Message
-        if(!response.ok) {
-            throw new Error(`Response Status: ${response.status}`)
-        }
+    // try {
+    //     //Call the covers API with specified fields in the body
+    //     const response = await fetch(cover_url, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
+    //             'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
+    //         },
+    //         body: `fields image_id; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});`
+    //     })
+    //     //Get the Error Message
+    //     if(!response.ok) {
+    //         throw new Error(`Response Status: ${response.status}`)
+    //     }
 
-        //Get the response as a JSON object
-        const result = await response.json()
+    //     //Get the response as a JSON object
+    //     const result = await response.json()
 
-        //Iterate through the result for each individual game and update HTML
-        for (let i = 0; i < result.length; i++) {
-            // searchResults += `
-            //     <image src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].image_id}.jpg'>
-            // `
+    //     //Iterate through the result for each individual game and update HTML
+    //     for (let i = 0; i < result.length; i++) {
+    //         //Also double check that covers match game IDs
+    //         if(result[i].id = gameIDs[i]) {
+    //             gameCovers.push(`<image src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].image_id}.jpg'>`)
+    //         }   
+    //     }
 
-            gameCovers.push(`<image src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].image_id}.jpg'>`)
-        }
+    //     console.log("Covers Length: " + result.length)
 
-        //Print the error message
-    } catch (error) {
-        console.error(error.message)
-    }
+    //     //Print the error message
+    // } catch (error) {
+    //     console.error(error.message)
+    // }
 
-    try {
-        //Call the release date API with specified fields in the body
-        const response = await fetch(release_url, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
-                'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
-            },
-            body: `fields human; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]});`
-            //, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});
-        })
-        //Get the Error Message
-        if(!response.ok) {
-            throw new Error(`Response Status: ${response.status}`)
-        }
+    // try {
+    //     //Call the release date API with specified fields in the body
+    //     const response = await fetch(release_url, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
+    //             'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
+    //         },
+    //         body: `fields human; where game=(${gameIDs[0]}, ${gameIDs[1]}, ${gameIDs[2]}, ${gameIDs[3]}, ${gameIDs[4]}, ${gameIDs[5]}, ${gameIDs[6]}, ${gameIDs[7]}, ${gameIDs[8]}, ${gameIDs[9]});`
+    //     })
+    //     //Get the Error Message
+    //     if(!response.ok) {
+    //         throw new Error(`Response Status: ${response.status}`)
+    //     }
 
-        //Get the response as a JSON object
-        const result = await response.json()
+    //     //Get the response as a JSON object
+    //     const result = await response.json()
 
-        //Iterate through the result for each individual game and update HTML
-        for (let i = 0; i < result.length; i++) {
-            // searchResults += `
-            //     <p>Release Date: ${result[i].human}</p>
-            // `
+    //     //Iterate through the result for each individual game and update HTML
+    //     for (let i = 0; i < result.length; i++) {
+    //         if(result[i].id = gameIDs[i]) {
+    //             gameDates.push(result[i].human)
+    //         }  
+    //     }
+    //     console.log("Release Date Length: " + result.length)
 
-            gameDates.push(result[i].human)
-        }
-
-        //Print the error message
-    } catch (error) {
-        console.error(error.message)
-    }
+    //     //Print the error message
+    // } catch (error) {
+    //     console.error(error.message)
+    // }
 
     //Create search results HTML and update element
-    for(let i = 0; i < 3; i++) {
+    for(let i = 0; i < gameIDs.length; i++) {
         searchResults += `
             <h1>Name: ${gameNames[i]}</h1>
             <p>ID: ${gameIDs[i]}</p>

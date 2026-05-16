@@ -1,44 +1,21 @@
+//Electron Import
 const { app, BrowserWindow } = require('electron')
 
+//Function to create the browser window
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 600,
-        height: 280.
+        height: 280
     })
 
-    //CORS Bypass
-    // win.webContents.session.webRequest.onBeforeSendHeaders(
-    //     (details, callback) => {
-    //         callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
-    //      },
-    // );
-
-    // win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    //     callback({
-    //         responseHeaders: {
-    //             'Access-Control-Allow-Origin': ['*'],
-    //             // We use this to bypass headers
-    //             'Access-Control-Allow-Headers': ['*'],
-    //             ...details.responseHeaders,
-    //         },
-    //     });
-    // });
-
-    //Content Security Policy
-    // win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    //     callback({
-    //         responseHeaders: {
-    //             ...details.responseHeaders,
-    //             'Content-Security-Policy': ['default-src \'none\'']
-    //         }
-    //     })
-    // })
-
+    //Use the following HTML file
     win.loadFile('index.html')
 
+    //Disable the menu bar up top
     win.setMenuBarVisibility(false)
 }
 
+//Wait for the app to load, then create the window
 app.whenReady().then(() => {
     createWindow()
 })
