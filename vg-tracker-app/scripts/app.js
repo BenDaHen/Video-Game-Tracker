@@ -59,7 +59,7 @@ async function callAPI(game) {
                 'Client-ID': 'k7bfoqx7zwlvv5q6bdyrhq2gzapd69',
                 'Authorization': 'Bearer 6gn8xu1u1exw9vgogrxnqpsqzvr3jf'
             },
-            body: `search "${game}"; fields *, name, cover.image_id, release_dates.human;`
+            body: `search "${game}"; fields name, release_dates.human, cover.image_id;`
         })
         //Get the Error Message
         if(!response.ok) {
@@ -82,7 +82,7 @@ async function callAPI(game) {
             gameIDs.push(result[i].id)
             gameNames.push(result[i].name)
             gameCovers.push(`<image src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].cover.image_id}.jpg'>`)
-            gameDates.push(result[i].release_dates?.human)
+            gameDates.push(result[i].release_dates?.[0]?.human || "TBD") //If a release date exists and is not falsy, get the human value at index 0, otherwise "TBD"
         }
 
     //Print the error message
