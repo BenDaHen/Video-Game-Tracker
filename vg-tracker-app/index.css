@@ -26,17 +26,11 @@ String Cyan #4ECDC4
 #search-results {
     position: absolute;
     z-index: 1;
-    background-color: #494949;    
+    background-color: #494949; 
     border-bottom: solid 2px black;
     border-radius: 6px;
     max-width: 500px;
-}
-
-.search-result-box {
-    display: flex;
-    margin: 6px 4px;
-    height: 200px;
-    padding: 10px 0px;
+    margin-bottom: 20px;
 }
 
 .game-box {
@@ -72,17 +66,14 @@ String Cyan #4ECDC4
 
 .title-box {
     display: flex;
-    flex-direction: column;
     background: linear-gradient(#FF5D73, #7C7A7A);
     border: solid 2px black;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     min-width: 150px;
     height: 200px;
-}
-
-.title {
     justify-content: center;
+    align-items: center;
 }
 
 #update-button {

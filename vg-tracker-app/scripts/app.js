@@ -96,7 +96,7 @@ async function callAPI(game) {
                 </div>
                 <!-- Title -->
                 <div class="title-box">           
-                    <h2 class="title">${gameNames[i]}</h2>
+                    <h2>${gameNames[i]}</h2>
                 </div>
             </div>
         `
