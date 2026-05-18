@@ -35,10 +35,8 @@ searchBarButton.addEventListener("click", function() {
 async function callAPI(game) {
     //Base URls
     const game_url = "https://api.igdb.com/v4/games/"
-    const cover_url = "https://api.igdb.com/v4/covers"
-    const release_url = "https://api.igdb.com/v4/release_dates"
 
-    //Search Results and store IDs for later calls
+    //Search Results
     let gameIDs = []
     let gameNames = []
     let gameCovers = []
@@ -85,23 +83,48 @@ async function callAPI(game) {
     //Create search results HTML and update element
     for(let i = 0; i < gameIDs.length; i++) {
         searchResults += `
-            <div class="game-box">
-                <!-- Release Date -->
-                <div class="release-date-box">
-                    <h1>${gameDates[i]}</h1>
+            <div id="searched-game-${i}">
+                <div class="game-box">
+                    <!-- Release Date -->
+                    <div class="release-date-box">
+                        <h1>${gameDates[i]}</h1>
+                    </div>
+                    <!-- Cover Art -->
+                    <div class="cover-art-box">
+                        ${gameCovers[i]}
+                    </div>
+                    <!-- Title -->
+                    <div class="title-box">           
+                        <h2>${gameNames[i]}</h2>
+                    </div>
                 </div>
-                <!-- Cover Art -->
-                <div class="cover-art-box">
-                    ${gameCovers[i]}
-                </div>
-                <!-- Title -->
-                <div class="title-box">           
-                    <h2>${gameNames[i]}</h2>
-                </div>
+            </div>
+            <div>
+                <button class="add-button" onclick="addGame(${i})">Add to Tracker</button>
             </div>
         `
         //<p>ID: ${gameIDs[i]}</p>
+
+        //Populate game result elements
     }
 
     searchResultsEl.innerHTML = searchResults
+}
+
+//Add a search result to the main tracker
+
+function addGame(gameNumber) {
+    //Get the game to be added
+    let searchedGameEl = document.getElementById(`searched-game-${gameNumber}`)
+
+    //Get the current tracked games
+    let trackedGamesEl = document.getElementById("tracked-games")
+
+    //Add the game
+    let newGame = searchedGameEl.innerHTML
+    trackedGamesEl.innerHTML += newGame
+
+    //Clear search results
+    let searchResultsEl = document.getElementById("search-results")
+    searchResultsEl.innerHTML = ""
 }

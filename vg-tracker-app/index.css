@@ -30,7 +30,16 @@ String Cyan #4ECDC4
     border-bottom: solid 2px black;
     border-radius: 6px;
     max-width: 500px;
-    margin-bottom: 20px;
+}
+
+.add-button {
+    background: #FF5D73;
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 3px 4px;
+    font-weight: bolder;
+    color: white;
+    margin-left: 10px;
 }
 
 .game-box {
