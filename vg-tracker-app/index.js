@@ -1,11 +1,15 @@
 //Electron Import
 const { app, BrowserWindow } = require('electron')
+const path = require('path')
 
 //Function to create the browser window
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 600,
-        height: 280
+        height: 280,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
     })
 
     //Use the following HTML file

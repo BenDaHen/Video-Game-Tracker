@@ -1,3 +1,13 @@
+//Database Test
+document.addEventListener('DOMContentLoaded', async () => {
+    let names = window.api.getNames()
+
+    let namesEl = document.getElementById("names")
+
+    let nameString = names.join("<br />")
+    divNames.innerHTML = nameString
+})
+
 //Dummy Data
 let dummy_title = "Trails in the Sky First Chapter"
 let dummy_cover_art = "https://images.igdb.com/igdb/image/upload/t_cover_big/co96kj.webp"
