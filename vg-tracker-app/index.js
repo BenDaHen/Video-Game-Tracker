@@ -1,6 +1,7 @@
 //Electron Import
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
+const sqlite = require('better-sqlite3')
 
 //Function to create the browser window
 const createWindow = () => {
@@ -8,8 +9,19 @@ const createWindow = () => {
         width: 600,
         height: 280,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
         }
+    })
+
+    //Create a new Database
+    const db = new sqlite("./tracker.db")
+
+    //Handle get names
+    ipcMain.handle("get-names", (event, args) => {
+        const query = "SELECT name FROM games"
+        let statement = db.prepare(query)
+        let result = statement.all()
+        return result
     })
 
     //Use the following HTML file
@@ -23,3 +35,4 @@ const createWindow = () => {
 app.whenReady().then(() => {
     createWindow()
 })
+

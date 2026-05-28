@@ -1,10 +1,6 @@
-const testMgr = require("./models/testmgr")
-const {contextBridge} = require("electron")
+const { contextBridge, ipcRenderer } = require("electron")
 
-const getNames = () => {
-    return testMgr.getNames()
-}
-
-contextBridge.exposeInMainWorld("api", {
-    getNames: getNames
+//Expose the database functions as "api"
+contextBridge.exposeInMainWorld('api', {
+    getNames: () => ipcRenderer.invoke('get-names')
 })

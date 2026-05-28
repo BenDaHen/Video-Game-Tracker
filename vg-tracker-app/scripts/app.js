@@ -1,12 +1,20 @@
 //Database Test
-document.addEventListener('DOMContentLoaded', async () => {
-    let names = window.api.getNames()
+document.addEventListener('DOMContentLoaded', async () => { //Call this function when the app starts
+    console.log("Testing the DB")
+    let names = await window.api.getNames() //Database functions are exposed as "api"
 
-    let namesEl = document.getElementById("names")
+    let namesEl = document.getElementById("db-test")
 
-    let nameString = names.join("<br />")
-    divNames.innerHTML = nameString
+    let nameString = names.map((element) => {
+        return element.name
+    }).join("<br />")
+    
+    namesEl.innerHTML = nameString
 })
+
+const get_names = async () => {
+    
+}
 
 //Dummy Data
 let dummy_title = "Trails in the Sky First Chapter"
