@@ -12,10 +12,6 @@ document.addEventListener('DOMContentLoaded', async () => { //Call this function
     namesEl.innerHTML = nameString
 })
 
-const get_names = async () => {
-    
-}
-
 //Dummy Data
 let dummy_title = "Trails in the Sky First Chapter"
 let dummy_cover_art = "https://images.igdb.com/igdb/image/upload/t_cover_big/co96kj.webp"

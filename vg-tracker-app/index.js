@@ -10,14 +10,16 @@ const createWindow = () => {
         height: 280,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
+            sandbox: true,
         }
     })
 
-    //Create a new Database
+    //Create/retrieve the Database
     const db = new sqlite("./tracker.db")
 
     //Handle get names
-    ipcMain.handle("get-names", (event, args) => {
+    ipcMain.handle("get-names", (event, args) => { //Listening on the get-names channel
+        //Perform the required query and return the result
         const query = "SELECT name FROM games"
         let statement = db.prepare(query)
         let result = statement.all()
@@ -35,4 +37,3 @@ const createWindow = () => {
 app.whenReady().then(() => {
     createWindow()
 })
-
