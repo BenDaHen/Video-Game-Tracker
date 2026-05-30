@@ -2,15 +2,46 @@
 document.addEventListener('DOMContentLoaded', async () => { //Call this function when the app starts
     console.log("Testing the DB")
     let names = await window.api.getNames() //Database functions are exposed as "api"
+    // let covers = await window.api.getCover()
 
     let namesEl = document.getElementById("db-test")
 
     let nameString = names.map((element) => {
         return element.name
     }).join("<br />")
+
+    // let coversString = covers.map((element) => {
+    //     return element.cover
+    // }).join("<br />")
     
     namesEl.innerHTML = nameString
+    // names.innerHTML += coversString
 })
+
+async function renderDB() {
+    console.log("Testing the DB")
+    let names = await window.api.getNames() //Database functions are exposed as "api"
+    // let covers = await window.api.getCover()
+
+    let namesEl = document.getElementById("db-test")
+
+    let nameString = names.map((element) => {
+        return element.name
+    }).join("<br />")
+
+    // let coversString = covers.map((element) => {
+    //     return element.cover
+    // }).join("<br />")
+    
+    namesEl.innerHTML = nameString
+    // names.innerHTML += coversString
+}
+
+//Insert an entry into the database
+function addEntry(id, name, cover, release_date) {
+    window.api.addEntry(id, name, cover, release_date)
+    renderDB() //Re-render the database
+}
 
 //Dummy Data
 let dummy_title = "Trails in the Sky First Chapter"
@@ -88,7 +119,7 @@ async function callAPI(game) {
             //Store the game ids for cover art and release date API calls
             gameIDs.push(result[i].id)
             gameNames.push(result[i].name)
-            gameCovers.push(`<image class="cover-art" src='https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].cover?.image_id}.jpg'>`)
+            gameCovers.push(result[i].cover?.image_id)
             gameDates.push(result[i].release_dates?.[0]?.human || "TBD") //If a release date exists and is not falsy, get the human value at index 0, otherwise "TBD"
         }
 
@@ -111,7 +142,7 @@ async function callAPI(game) {
                             </div>
                             <!-- Cover Art -->
                             <div class="cover-art-box">
-                                ${gameCovers[i]}
+                                <image class="cover-art" src='https://images.igdb.com/igdb/image/upload/t_cover_big/${gameCovers[i]}.jpg'>
                             </div>
                             <!-- Title -->
                             <div class="title-box">           
@@ -137,7 +168,7 @@ async function callAPI(game) {
                         </div>
                         <!-- Cover Art -->
                         <div class="cover-art-box">
-                            ${gameCovers[i]}
+                            <image class="cover-art" src='https://images.igdb.com/igdb/image/upload/t_cover_big/${gameCovers[i]}.jpg'>
                         </div>
                         <!-- Title -->
                         <div class="title-box">           
@@ -146,7 +177,7 @@ async function callAPI(game) {
                     </div>
                 </div>
                 <div>
-                    <button class="add-remove-button add-button" onclick="addGame(${i}, ${gameIDs[i]})">Add to Tracker</button>
+                    <button class="add-remove-button add-button" onclick="addGame(${i}, ${gameIDs[i]}, '${gameNames[i]}', '${gameCovers[i]}', '${gameDates[i]}')">Add to Tracker</button>
                 </div>
             </div> 
             `
@@ -157,7 +188,8 @@ async function callAPI(game) {
 }
 
 //Add a search result to the main tracker
-function addGame(gameNumber, gameID) {
+function addGame(gameNumber, gameID, gameName, gameCover, gameReleaseDate) {
+    console.log("Calling addGame Function")
     //Tracker for number of games on list
 
     //Get the game to be added
@@ -186,6 +218,9 @@ function addGame(gameNumber, gameID) {
     //Clear search results
     let searchResultsEl = document.getElementById("search-results")
     searchResultsEl.innerHTML = ""
+
+    //Append to DB
+    addEntry(gameID, gameName, gameCover, gameReleaseDate)
 }
 
 //Remove a game from the main tracker

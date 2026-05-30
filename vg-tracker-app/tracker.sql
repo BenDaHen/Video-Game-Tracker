@@ -8,7 +8,7 @@
 --     release_date TEXT
 -- );
 
--- INSERT INTO games(id, name, cover, release_date) 
--- VALUES(123456, 'Trails in the Sky 1st Chapter', 'https://images.igdb.com/igdb/image/upload/t_cover_big/co96kj.webp', 'September 19, 2025');
+INSERT INTO games(id, name, cover, release_date) 
+VALUES(67890, 'Trails in the Sky 2nd Chapter', 'https://images.igdb.com/igdb/image/upload/t_cover_big/co96kj.webp', 'September 17, 2026');
 
 SELECT * FROM games;

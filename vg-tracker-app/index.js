@@ -26,6 +26,31 @@ const createWindow = () => {
         return result
     })
 
+    //Handle get cover
+    ipcMain.handle("get-covers", (event, args) => { //Listening on the get-names channel
+        //Perform the required query and return the result
+        const query = "SELECT cover FROM games"
+        let statement = db.prepare(query)
+        let result = statement.all()
+        return result
+    })
+
+    //Handle adding a new entry
+    ipcMain.on("add-entry", (event, id, name, cover, release_date) => { //Listening on the get-names channel
+        //Perform the required query and return the result
+        console.log("Adding Entry to Database")
+        console.log(`ID: ${id}`)
+        console.log(`Name: '${name}'`)
+        console.log(`Cover: '${cover}'`)
+        console.log(`Release Date: '${release_date}'`)
+        const query = `
+            INSERT INTO games(id, name, cover, release_date)
+            VALUES(${id}, '${name}', '${cover}', '${release_date}')
+        `
+        // let statement = db.prepare(query)
+        db.exec(query)
+    })
+
     //Use the following HTML file
     win.loadFile('index.html')
 
