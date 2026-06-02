@@ -194,7 +194,14 @@ async function callAPI(game) {
     //Create search results HTML and update element
     for(let i = 0; i < gameIDs.length; i++) {
         //Check if the game is already in the tracker
-        if(trackedGameIDs.includes(gameIDs[i]) === true) {
+        let dbResults = await window.api.getAll()
+        let idArray = []
+
+        dbResults.map((element) => {
+            idArray.push(element.id)
+        })
+
+        if(idArray.includes(gameIDs[i]) === true) {
             searchResults += `
                 <div id="searched-game-${i}">
                     <div id="${gameIDs[i]}">
