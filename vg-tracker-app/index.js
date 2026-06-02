@@ -17,21 +17,23 @@ const createWindow = () => {
     //Create/retrieve the Database
     const db = new sqlite("./tracker.db")
 
-    //Handle get names
-    ipcMain.handle("get-names", (event, args) => { //Listening on the get-names channel
+    //Handle get all
+    ipcMain.handle("get-all", (event, args) => { //Listening on the get-all channel
         //Perform the required query and return the result
-        const query = "SELECT name FROM games"
+        const query = "SELECT * FROM games"
         let statement = db.prepare(query)
         let result = statement.all()
+        console.log(result)
         return result
     })
 
-    //Handle get cover
-    ipcMain.handle("get-covers", (event, args) => { //Listening on the get-names channel
+    //Handle delete all
+    ipcMain.handle("delete-all", (event, args) => { //Listening on the get-all channel
         //Perform the required query and return the result
-        const query = "SELECT cover FROM games"
+        const query = "DELETE FROM games"
         let statement = db.prepare(query)
         let result = statement.all()
+        console.log("Truncating database")
         return result
     })
 
@@ -48,6 +50,13 @@ const createWindow = () => {
             VALUES(${id}, '${name}', '${cover}', '${release_date}')
         `
         // let statement = db.prepare(query)
+        db.exec(query)
+    })
+
+    //Handle deleting an entry
+    ipcMain.on("delete-entry", (event, id) => {
+        console.log("Deleting id " + id + " from the database")
+        const query = `DELETE FROM games WHERE id=${id}`
         db.exec(query)
     })
 

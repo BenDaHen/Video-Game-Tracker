@@ -1,46 +1,108 @@
 //Database Test
 document.addEventListener('DOMContentLoaded', async () => { //Call this function when the app starts
     console.log("Testing the DB")
-    let names = await window.api.getNames() //Database functions are exposed as "api"
+    let dbResults = await window.api.getAll() //Database functions are exposed as "api"
     // let covers = await window.api.getCover()
 
-    let namesEl = document.getElementById("db-test")
+    let databaseEl = document.getElementById("db-test")
 
-    let nameString = names.map((element) => {
-        return element.name
+    //Strings to store data
+    let idArray = []
+    let namesArray = []
+    let coverArray = []
+    let releaseDateArray = []
+
+    dbResults.map((element) => {
+        namesArray.push(element.name)
     }).join("<br />")
-
-    // let coversString = covers.map((element) => {
-    //     return element.cover
-    // }).join("<br />")
     
-    namesEl.innerHTML = nameString
-    // names.innerHTML += coversString
+    for (let i = 0; i < namesArray.length; i++) {
+        databaseEl.innerHTML += namesArray[i]
+    }
+
+    renderDB()
+
 })
 
 async function renderDB() {
     console.log("Testing the DB")
-    let names = await window.api.getNames() //Database functions are exposed as "api"
-    // let covers = await window.api.getCover()
+    let dbResults = await window.api.getAll() //Database functions are exposed as "api"
+    let databaseEl = document.getElementById("db-test")
+    let trackedGameEl = document.getElementById("tracked-games")
 
-    let namesEl = document.getElementById("db-test")
+    //Strings to store data
+    let idArray = []
+    let namesArray = []
+    let coverArray = []
+    let releaseDateArray = []
 
-    let nameString = names.map((element) => {
-        return element.name
-    }).join("<br />")
+    //Get all the ids
+    dbResults.map((element) => {
+        idArray.push(element.id)
+    })
 
-    // let coversString = covers.map((element) => {
-    //     return element.cover
-    // }).join("<br />")
+    //Get all the names
+    dbResults.map((element) => {
+        namesArray.push(element.name)
+    })
+
+    //Get all the covers
+    dbResults.map((element) => {
+        coverArray.push(element.cover)
+    })
+
+    //Get all the release dates
+    dbResults.map((element) => {
+        releaseDateArray.push(element.release_date)
+    })
     
-    namesEl.innerHTML = nameString
-    // names.innerHTML += coversString
+    console.log("Names Array Length: " + namesArray.length)
+    console.log("Names Array: " + namesArray)
+
+    //Reset the renderer
+    trackedGameEl.innerHTML = ""
+
+    //Render out each game
+    for (let i = 0; i < namesArray.length; i++) {
+        trackedGameEl.innerHTML += `
+            <div id="${idArray[i]}">
+                <div class="game-box">
+                    <!-- Release Date -->
+                    <div class="release-date-box">
+                        <h1>${releaseDateArray[i]}</h1>
+                    </div>
+                    <!-- Cover Art -->
+                    <div class="cover-art-box">
+                        <image class="cover-art" src='${coverArray[i]}'>
+                    </div>
+                    <!-- Title -->
+                    <div class="title-box">           
+                        <h2>${namesArray[i]}</h2>
+                    </div>
+                </div>
+                <div id=btn-${idArray[i]}>
+                    <button class="add-remove-button remove-button" onclick="deleteEntry(${idArray[i]})">Remove from Tracker</button>
+                </div>
+            </div> 
+        `
+    }
+}
+
+//Add a button to delete all values in DB
+function deleteAll() {
+    window.api.deleteAll()
+    renderDB()
 }
 
 //Insert an entry into the database
 function addEntry(id, name, cover, release_date) {
     window.api.addEntry(id, name, cover, release_date)
     renderDB() //Re-render the database
+}
+
+function deleteEntry(id) {
+    window.api.deleteEntry(id)
+    renderDB()
 }
 
 //Dummy Data
@@ -67,6 +129,7 @@ deleteBtn.addEventListener("click", function() {
     gameTitle.textContent = "Game Title"
     gameCA.src = "./images/cat.jpg"
     gameRD.textContent = "Release Date"
+    deleteAll()
 })
 
 //Get Search Bar info
@@ -119,7 +182,7 @@ async function callAPI(game) {
             //Store the game ids for cover art and release date API calls
             gameIDs.push(result[i].id)
             gameNames.push(result[i].name)
-            gameCovers.push(result[i].cover?.image_id)
+            gameCovers.push(`https://images.igdb.com/igdb/image/upload/t_cover_big/${result[i].cover?.image_id}.jpg`)
             gameDates.push(result[i].release_dates?.[0]?.human || "TBD") //If a release date exists and is not falsy, get the human value at index 0, otherwise "TBD"
         }
 
@@ -142,7 +205,7 @@ async function callAPI(game) {
                             </div>
                             <!-- Cover Art -->
                             <div class="cover-art-box">
-                                <image class="cover-art" src='https://images.igdb.com/igdb/image/upload/t_cover_big/${gameCovers[i]}.jpg'>
+                                <image class="cover-art" src='${gameCovers[i]}'>
                             </div>
                             <!-- Title -->
                             <div class="title-box">           
@@ -168,7 +231,7 @@ async function callAPI(game) {
                         </div>
                         <!-- Cover Art -->
                         <div class="cover-art-box">
-                            <image class="cover-art" src='https://images.igdb.com/igdb/image/upload/t_cover_big/${gameCovers[i]}.jpg'>
+                            <image class="cover-art" src='${gameCovers[i]}'>
                         </div>
                         <!-- Title -->
                         <div class="title-box">           
@@ -192,28 +255,28 @@ function addGame(gameNumber, gameID, gameName, gameCover, gameReleaseDate) {
     console.log("Calling addGame Function")
     //Tracker for number of games on list
 
-    //Get the game to be added
-    let searchedGameEl = document.getElementById(`${gameID}`)
+    // //Get the game to be added
+    // let searchedGameEl = document.getElementById(`${gameID}`)
 
-    //Get the current tracked games
-    let trackedGamesEl = document.getElementById("tracked-games")
+    // //Get the current tracked games
+    // let trackedGamesEl = document.getElementById("tracked-games")
 
-    //Add the game
-    let newGame = searchedGameEl.outerHTML
+    // //Add the game
+    // let newGame = searchedGameEl.outerHTML
 
-    console.log("Searched game outer HTML: " + searchedGameEl.outerHTML)
+    // console.log("Searched game outer HTML: " + searchedGameEl.outerHTML)
 
-    trackedGamesEl.innerHTML += newGame
+    // trackedGamesEl.innerHTML += newGame
 
-    //Add the remove button
-    trackedGamesEl.innerHTML += `
-        <div id=btn-${gameID}>
-            <button class="add-remove-button remove-button" onclick="removeGame(${gameID})">Remove from Tracker</button>
-        </div>
-    `
+    // //Add the remove button
+    //trackedGamesEl.innerHTML += `
+    //<div id=btn-${gameID}>
+    //         <button class="add-remove-button remove-button" onclick="removeGame(${gameID})">Remove from Tracker</button>
+    //     </div>
+    // `
 
-    //Add the game ID to tracked games list
-    trackedGameIDs.push(gameID)
+    // //Add the game ID to tracked games list
+    // trackedGameIDs.push(gameID)
 
     //Clear search results
     let searchResultsEl = document.getElementById("search-results")
