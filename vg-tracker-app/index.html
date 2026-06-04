@@ -1,37 +1,33 @@
+<!-- Index.html -->
 <!doctype html>
 
 <html>
+    <head>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <!-- Main Window -->
+        <div id="main-window">
+            <div>
+                <!-- Search Bar -->
+                <div id="search-bar-box">
+                    <input type="text" placeholder="Search for a game" id="search-bar"/>
+                    <button id="search-bar-button">Search</button>
+                    <button id="cancel-search-button">Cancel</button>
+                </div>
 
-<head>
-    <link rel="stylesheet" href="index.css">
-</head>
+                <!-- Search Results -->
+                <div id="search-results">
+                    
+                </div>
 
-<body>
-    <!-- Main Window -->
-    <div id="main-window">
-        <div>
-            <!-- Search Bar -->
-            <div id="search-bar-box">
-                <input type="text" placeholder="Search for a game" id="search-bar"/>
-                <button id="search-bar-button">Search</button>
-            </div>
-
-            <!-- Search Results -->
-            <div id="search-results">
-                
-            </div>
-
-            <!-- Game Boxes -->
-            <div id="tracked-games">
-                
+                <!-- Game Boxes -->
+                <div id="tracked-games">
+                    
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Button -->
-    <button id="delete-button">Delete All</button>
-
-    <script src="scripts/app.js"></script>
-</body>
-
+        <script src="scripts/app.js"></script>
+    </body>
 </html>

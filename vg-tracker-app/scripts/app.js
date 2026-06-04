@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => { //Call this function
 
 //Render the Database
 async function renderDB() {
-    console.log("Rendering the DB")
     let dbResults = await window.api.getAll() //Database functions are exposed as "api"
     let trackedGameEl = document.getElementById("tracked-games")
 
@@ -64,12 +63,6 @@ async function renderDB() {
     }
 }
 
-//Add a button to delete all values in DB
-function deleteAll() {
-    window.api.deleteAll()
-    renderDB()
-}
-
 //Insert an entry into the database
 function addEntry(id, name, cover, release_date) {
     window.api.addEntry(id, name, cover, release_date)
@@ -82,19 +75,21 @@ function deleteEntry(id) {
     renderDB()
 }
 
-//Get Buttons
-let deleteBtn = document.getElementById("delete-button")
-
-deleteBtn.addEventListener("click", function() {
-    deleteAll()
-})
-
 //Get Search Bar info
 let searchBar = document.getElementById("search-bar")
 let searchBarButton = document.getElementById("search-bar-button")
+let cancelSearchButton = document.getElementById("cancel-search-button")
 
+//Call the API to search for a game
 searchBarButton.addEventListener("click", function() {
     callAPI(searchBar.value)
+})
+
+//Return to the main window, removing search results and re-rendering the DB
+cancelSearchButton.addEventListener("click", function() {
+    let searchResultsEl = document.getElementById("search-results")
+    searchResultsEl.innerHTML = ""
+    renderDB()
 })
 
 //Tracked game IDs for later use
@@ -130,8 +125,6 @@ async function callAPI(game) {
 
         //Get the response as a JSON object
         const result = await response.json()
-
-        console.log(result.length)
 
         //Iterate through the result for each individual game and get the ids and names
         for (let i = 0; i < result.length; i++) {
@@ -178,7 +171,7 @@ async function callAPI(game) {
                         </div>
                     </div>
                     <div>
-                        <p>Game already on list</p>
+                        <p class="existing-game">Game Already on List</p>
                     </div>
                 </div>   
             `
@@ -211,13 +204,16 @@ async function callAPI(game) {
         }
     }
 
+    //Update HTML with search results
     searchResultsEl.innerHTML = searchResults
+
+    //Clear tracker HTML
+    let trackerEl = document.getElementById("tracked-games")
+    trackerEl.innerHTML = ""
 }
 
 //Add a search result to the main tracker
 function addGame(gameNumber, gameID, gameName, gameCover, gameReleaseDate) {
-    console.log("Calling addGame Function")
-
     //Clear search results
     let searchResultsEl = document.getElementById("search-results")
     searchResultsEl.innerHTML = ""
